@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ clinic.name }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>{{ clinic.name }}</h1>
+    </header>
+    <div class="container">
+        <a href="{{ url_for('register', clinic_id=clinic.id) }}"><button>Registration</button></a>
+        <a href="{{ url_for('doctor_home') }}"><button>Doctors Dashboard</button></a>
+    </div>
+</body>
+</html>

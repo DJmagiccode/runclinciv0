@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Details</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Patient Details</h1>
+    </header>
+    <div class="container">
+        <div class="patient-box">
+            <h2>{{ patient.first_name }} {{ patient.last_name }}</h2>
+            <p><strong>Address:</strong> {{ patient.address }}</p>
+            <p><strong>Contact:</strong> {{ patient.contact }}</p>
+            <p><strong>Email:</strong> {{ patient.email }}</p>
+            <p><strong>Age:</strong> {{ patient.age }}</p>
+            <p><strong>Sex:</strong> {{ patient.sex }}</p>
+            <p><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
+            <p><strong>Emergency Contact:</strong> {{ patient.emergency_contact }}</p>
+            {% if patient.photo %}
+                <img src="{{ url_for('static', filename='uploads/' ~ patient.photo) }}" alt="Patient Photo" class="patient-photo">
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

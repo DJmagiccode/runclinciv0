@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patients</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function searchPatients() {
+            const search = document.getElementById('search').value;
+            window.location.href = `{{ url_for('patients') }}?search=${search}`;
+        }
+
+        function redirectToPatientDetail(patientId) {
+            window.location.href = `/patient/${patientId}`;
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Patients</h1>
+    </header>
+    <div class="container">
+        <input type="text" id="search" placeholder="Search patients...">
+        <button onclick="searchPatients()">Search</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Address</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>Sex</th>
+                    <th>Blood Group</th>
+                    <th>Emergency Contact</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in patients %}
+                    <tr onclick="redirectToPatientDetail({{ patient.id }})">
+                        <td>{{ patient.first_name }}</td>
+                        <td>{{ patient.last_name }}</td>
+                        <td>{{ patient.address }}</td>
+                        <td>{{ patient.contact }}</td>
+                        <td>{{ patient.email }}</td>
+                        <td>{{ patient.age }}</td>
+                        <td>{{ patient.sex }}</td>
+                        <td>{{ patient.blood_group }}</td>
+                        <td>{{ patient.emergency_contact }}</td>
+                        <td>
+                            <a href="{{ url_for('modify_patient', patient_id=patient.id) }}" onclick="event.stopPropagation();"><button type="button">Modify</button></a>
+                            <form action="{{ url_for('delete_patient', patient_id=patient.id) }}" method="POST" style="display:inline;" onsubmit="event.stopPropagation();">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

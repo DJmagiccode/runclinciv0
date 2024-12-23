@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medical Clinic</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Medical Clinic Portal</h1>
+    </header>
+    <div class="container">
+        <a href="{{ url_for('clinics') }}"><button>Choose a Clinic</button></a>
+        <a href="{{ url_for('add_clinic') }}"><button>Add a Clinic</button></a>
+    </div>
+</body>
+</html>
