@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ clinic.name }}</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>{{ clinic.name }}</h1>
+{% extends "base.html" %}
+
+{% block title %}{{ clinic.name }}{% endblock %}
+
+{% block content %}
+    <header class="bg-primary text-white text-center py-2">
+        <h1 class="h4">{{ clinic.name }}</h1>
     </header>
-    <div class="container">
-        <a href="{{ url_for('register', clinic_id=clinic.id) }}"><button>Registration</button></a>
-        <a href="{{ url_for('doctor_home') }}"><button>Doctors Dashboard</button></a>
+    <div class="container mt-3">
+        <a href="{{ url_for('register', clinic_id=clinic.id) }}"><button class="btn btn-primary">Registration</button></a>
+        <a href="{{ url_for('doctor_home') }}"><button class="btn btn-primary">Doctors Dashboard</button></a>
     </div>
-</body>
-</html>
+{% endblock %}

@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Clinics</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Select a Clinic</h1>
+{% extends "base.html" %}
+
+{% block title %}Clinics{% endblock %}
+
+{% block content %}
+    <header class="bg-primary text-white text-center py-2">
+        <h1 class="h4">Select a Clinic</h1>
     </header>
-    <div class="container">
+    <div class="container mt-3">
         {% for clinic in clinics %}
             <div class="clinic-box">
                 {% if clinic.photo %}
@@ -19,9 +17,8 @@
                 <h2>{{ clinic.name }}</h2>
                 <p>Contact: {{ clinic.contact }}</p>
                 <p>Head Doctor: {{ clinic.head_doctor }}</p>
-                <a href="{{ url_for('clinic_home', clinic_id=clinic.id) }}"><button>Visit Clinic</button></a>
+                <a href="{{ url_for('clinic_home', clinic_id=clinic.id) }}"><button class="btn btn-primary">Visit Clinic</button></a>
             </div>
         {% endfor %}
     </div>
-</body>
-</html>
+{% endblock %}

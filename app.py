@@ -1,10 +1,11 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, session
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from forms import RegistrationForm, ClinicForm
 from db import db
 from models import Clinic, Patient
 import os
+import logging
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
@@ -14,6 +15,13 @@ migrate = Migrate(app, db)
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Set up logging
+logging.basicConfig(filename='error.log', level=logging.ERROR)
+
+@app.shell_context_processor
+def make_shell_context():
+    return {'db': db, 'Clinic': Clinic, 'Patient': Patient}
 
 @app.route('/')
 def index():
@@ -48,6 +56,7 @@ def add_clinic():
 @app.route('/clinic/<int:clinic_id>')
 def clinic_home(clinic_id):
     clinic = Clinic.query.get_or_404(clinic_id)
+    session['clinic_id'] = clinic_id
     return render_template('clinic_home.html', clinic=clinic)
 
 @app.route('/clinic/<int:clinic_id>/register', methods=['GET', 'POST'])
@@ -144,6 +153,16 @@ def delete_patient(patient_id):
     db.session.delete(patient)
     db.session.commit()
     return redirect(url_for('patients'))
+
+@app.errorhandler(500)
+def internal_error(error):
+    logging.error(f"Server Error: {error}, route: {request.url}")
+    return "", 204
+
+@app.errorhandler(Exception)
+def unhandled_exception(e):
+    logging.error(f"Unhandled Exception: {e}, route: {request.url}")
+    return "", 204
 
 if __name__ == '__main__':
     app.run(debug=True)

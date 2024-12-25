@@ -1,28 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Patients</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <script>
-        function searchPatients() {
-            const search = document.getElementById('search').value;
-            window.location.href = `{{ url_for('patients') }}?search=${search}`;
-        }
+{% extends "base.html" %}
 
-        function redirectToPatientDetail(patientId) {
-            window.location.href = `/patient/${patientId}`;
-        }
-    </script>
-</head>
-<body>
-    <header>
-        <h1>Patients</h1>
+{% block title %}Patients{% endblock %}
+
+{% block content %}
+    <header class="bg-primary text-white text-center py-2">
+        <h1 class="h4">Patients</h1>
     </header>
-    <div class="container">
-        <input type="text" id="search" placeholder="Search patients...">
-        <button onclick="searchPatients()">Search</button>
-        <table>
-            <thead>
+    <div class="container mt-3">
+        <input type="text" id="search" class="form-control mb-3" placeholder="Search patients...">
+        <button class="btn btn-primary mb-3" onclick="searchPatients()">Search</button>
+        <table class="table table-hover">
+            <thead class="thead-light">
                 <tr>
                     <th>First Name</th>
                     <th>Last Name</th>
@@ -49,9 +37,11 @@
                         <td>{{ patient.blood_group }}</td>
                         <td>{{ patient.emergency_contact }}</td>
                         <td>
-                            <a href="{{ url_for('modify_patient', patient_id=patient.id) }}" onclick="event.stopPropagation();"><button type="button">Modify</button></a>
+                            <form action="{{ url_for('modify_patient', patient_id=patient.id) }}" method="GET" style="display:inline;" onsubmit="event.stopPropagation();">
+                                <button type="submit" class="btn btn-primary btn-sm">Modify</button>
+                            </form>
                             <form action="{{ url_for('delete_patient', patient_id=patient.id) }}" method="POST" style="display:inline;" onsubmit="event.stopPropagation();">
-                                <button type="submit">Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -59,5 +49,14 @@
             </tbody>
         </table>
     </div>
-</body>
-</html>
+    <script>
+        function searchPatients() {
+            const search = document.getElementById('search').value;
+            window.location.href = `{{ url_for('patients') }}?search=${search}`;
+        }
+
+        function redirectToPatientDetail(patientId) {
+            window.location.href = `/patient/${patientId}`;
+        }
+    </script>
+{% endblock %}

@@ -1,28 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Modify Patient</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Modify Patient</h1>
+{% extends "base.html" %}
+
+{% block title %}Modify Patient{% endblock %}
+
+{% block content %}
+    <header class="bg-primary text-white text-center py-2">
+        <h1 class="h4">Modify Patient</h1>
     </header>
-    <div class="container">
+    <div class="container mt-3">
         <form method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
-            {{ form.first_name.label }} {{ form.first_name() }}<br>
-            {{ form.last_name.label }} {{ form.last_name() }}<br>
-            {{ form.address.label }} {{ form.address() }}<br>
-            {{ form.contact.label }} {{ form.contact() }}<br>
-            {{ form.email.label }} {{ form.email() }}<br>
-            {{ form.age.label }} {{ form.age() }}<br>
-            {{ form.sex.label }} {{ form.sex() }}<br>
-            {{ form.blood_group.label }} {{ form.blood_group() }}<br>
-            {{ form.emergency_contact.label }} {{ form.emergency_contact() }}<br>
-            {{ form.photo.label }} {{ form.photo() }}<br>
-            <button type="submit">Submit</button>
+            <div class="form-group">
+                <label for="first_name">{{ form.first_name.label }}</label>
+                {{ form.first_name(class="form-control", id="first_name") }}
+            </div>
+            <div class="form-group">
+                <label for="last_name">{{ form.last_name.label }}</label>
+                {{ form.last_name(class="form-control", id="last_name") }}
+            </div>
+            <div class="form-group">
+                <label for="address">{{ form.address.label }}</label>
+                {{ form.address(class="form-control", id="address") }}
+            </div>
+            <div class="form-group">
+                <label for="contact">{{ form.contact.label }}</label>
+                {{ form.contact(class="form-control", id="contact") }}
+            </div>
+            <div class="form-group">
+                <label for="email">{{ form.email.label }}</label>
+                {{ form.email(class="form-control", id="email") }}
+            </div>
+            <div class="form-group">
+                <label for="age">{{ form.age.label }}</label>
+                {{ form.age(class="form-control", id="age") }}
+            </div>
+            <div class="form-group">
+                <label for="sex">{{ form.sex.label }}</label>
+                {{ form.sex(class="form-control", id="sex") }}
+            </div>
+            <div class="form-group">
+                <label for="blood_group">{{ form.blood_group.label }}</label>
+                {{ form.blood_group(class="form-control", id="blood_group") }}
+            </div>
+            <div class="form-group">
+                <label for="emergency_contact">{{ form.emergency_contact.label }}</label>
+                {{ form.emergency_contact(class="form-control", id="emergency_contact") }}
+            </div>
+            <div class="form-group">
+                <label for="photo">{{ form.photo.label }}</label>
+                {{ form.photo(class="form-control-file", id="photo") }}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

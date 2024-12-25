@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Patient Details</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Patient Details</h1>
+{% extends "base.html" %}
+
+{% block title %}Patient Details{% endblock %}
+
+{% block content %}
+    <header class="bg-primary text-white text-center py-2">
+        <h1 class="h4">Patient Details</h1>
     </header>
-    <div class="container">
+    <div class="container mt-3">
         <div class="patient-box">
             <h2>{{ patient.first_name }} {{ patient.last_name }}</h2>
             <p><strong>Address:</strong> {{ patient.address }}</p>
@@ -23,5 +21,4 @@
             {% endif %}
         </div>
     </div>
-</body>
-</html>
+{% endblock %}
