@@ -1,9 +1,11 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session
+from flask_babel import Babel, gettext as _
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
-from forms import RegistrationForm, ClinicForm
+from functools import wraps
+from forms import RegistrationForm, ClinicForm, LoginForm, RegisterForm
+from models import Clinic, Patient, User
 from db import db
-from models import Clinic, Patient
 import os
 import logging
 
@@ -19,20 +21,76 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Set up logging
 logging.basicConfig(filename='error.log', level=logging.ERROR)
 
+# Configure Babel
+app.config['BABEL_DEFAULT_LOCALE'] = 'en'
+babel = Babel(app)
+
+
+def get_locale():
+    return request.args.get('lang', 'en')
+
 @app.shell_context_processor
 def make_shell_context():
-    return {'db': db, 'Clinic': Clinic, 'Patient': Patient}
+    return {'db': db, 'Clinic': Clinic, 'Patient': Patient, 'User': User}
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/favicon.ico')
+def favicon():
+    return redirect(url_for('static', filename='favicon.ico'))
 
 @app.route('/')
 def index():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
     return render_template('index.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if 'user_id' in session:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    register_form = RegisterForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.check_password(form.password.data):
+            session['user_id'] = user.id
+            return redirect(url_for('index'))
+        flash(_('Invalid username or password'), 'error')
+    return render_template('login.html', form=form, register_form=register_form)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register_user():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash(_('Registration successful. Please log in.'), 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('login'))
+
 @app.route('/clinics', methods=['GET', 'POST'])
+@login_required
 def clinics():
-    clinics = Clinic.query.all()
+    user_id = session['user_id']
+    clinics = Clinic.query.filter_by(owner_id=user_id).all()
     return render_template('clinics.html', clinics=clinics)
 
 @app.route('/add_clinic', methods=['GET', 'POST'])
+@login_required
 def add_clinic():
     form = ClinicForm()
     if form.validate_on_submit():
@@ -43,7 +101,7 @@ def add_clinic():
         clinic = Clinic(
             name=form.name.data,
             contact=form.contact.data,
-            owner=form.owner.data,
+            owner_id=session['user_id'],
             head_doctor=form.head_doctor.data,
             address=form.address.data,
             photo=photo_filename
@@ -54,19 +112,21 @@ def add_clinic():
     return render_template('add_clinic.html', form=form)
 
 @app.route('/clinic/<int:clinic_id>')
+@login_required
 def clinic_home(clinic_id):
     clinic = Clinic.query.get_or_404(clinic_id)
     session['clinic_id'] = clinic_id
     return render_template('clinic_home.html', clinic=clinic)
 
 @app.route('/clinic/<int:clinic_id>/register', methods=['GET', 'POST'])
-def register(clinic_id):
+@login_required
+def register_patient(clinic_id):
     form = RegistrationForm()
     if form.validate_on_submit():
         existing_patient = Patient.query.filter_by(contact=form.contact.data).first()
         if existing_patient:
-            flash('A patient with this contact number already exists.', 'error')
-            return redirect(url_for('register', clinic_id=clinic_id))
+            flash(_('A patient with this contact number already exists.'), 'error')
+            return redirect(url_for('register_patient', clinic_id=clinic_id))
         photo_filename = None
         if form.photo.data:
             photo_filename = secure_filename(form.photo.data.filename)
@@ -81,7 +141,8 @@ def register(clinic_id):
             sex=form.sex.data,
             blood_group=form.blood_group.data,
             emergency_contact=form.emergency_contact.data,
-            photo=photo_filename
+            photo=photo_filename,
+            clinic_id=clinic_id
         )
         db.session.add(patient)
         db.session.commit()
@@ -89,10 +150,12 @@ def register(clinic_id):
     return render_template('registration.html', form=form)
 
 @app.route('/doctor_home')
+@login_required
 def doctor_home():
     return render_template('doctor_home.html')
 
 @app.route('/patients')
+@login_required
 def patients():
     search = request.args.get('search')
     if search:
@@ -112,11 +175,13 @@ def patients():
     return render_template('patients.html', patients=patients)
 
 @app.route('/patient/<int:patient_id>')
+@login_required
 def patient_detail(patient_id):
     patient = Patient.query.get_or_404(patient_id)
     return render_template('patient_detail.html', patient=patient)
 
 @app.route('/patient/<int:patient_id>/modify', methods=['GET', 'POST'])
+@login_required
 def modify_patient(patient_id):
     patient = Patient.query.get_or_404(patient_id)
     form = RegistrationForm(obj=patient)
@@ -148,6 +213,7 @@ def modify_patient(patient_id):
     return render_template('modify_patient.html', form=form, patient=patient)
 
 @app.route('/patient/<int:patient_id>/delete', methods=['POST'])
+@login_required
 def delete_patient(patient_id):
     patient = Patient.query.get_or_404(patient_id)
     db.session.delete(patient)
