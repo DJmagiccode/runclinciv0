@@ -11,3 +11,11 @@ migrations/versions/315b9a9d8903_add_registration_id_to_patient.py
 migrations/__pycache__/env.cpython-312.pyc
 migrations/script.py.mako
 __pycache__/models.cpython-312.pyc
+messages.pot
+static/uploads/Screenshot_2024-12-19_152824.png
+static/uploads/Screenshot_2024-12-19_153036.png
+static/uploads/Screenshot_2024-12-19_153145.png
+translations/bn/LC_MESSAGES/messages.mo
+translations/bn/LC_MESSAGES/messages.po
+__pycache__/models.cpython-312.pyc
+__pycache__/forms.cpython-312.pyc
