@@ -26,14 +26,29 @@ class Clinic(db.Model):
 
 class Patient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(150), nullable=False)
-    last_name = db.Column(db.String(150), nullable=False)
-    address = db.Column(db.String(150), nullable=False)
-    contact = db.Column(db.String(150), nullable=False)
-    email = db.Column(db.String(150), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    address = db.Column(db.String(100), nullable=False)
+    contact = db.Column(db.String(20), nullable=False, unique=True)
+    email = db.Column(db.String(100), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     sex = db.Column(db.String(10), nullable=False)
     blood_group = db.Column(db.String(10), nullable=False)
-    emergency_contact = db.Column(db.String(150), nullable=False)
-    photo = db.Column(db.String(150), nullable=True)
-    clinic_id = db.Column(db.Integer, db.ForeignKey('clinic.id', name='fk_patient_clinic'), nullable=False)
+    emergency_contact = db.Column(db.String(20), nullable=False)
+    photo = db.Column(db.String(100))
+    clinic_id = db.Column(db.Integer, db.ForeignKey('clinic.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # New field
+
+    def __init__(self, first_name, last_name, address, contact, email, age, sex, blood_group, emergency_contact, photo, clinic_id, user_id):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.address = address
+        self.contact = contact
+        self.email = email
+        self.age = age
+        self.sex = sex
+        self.blood_group = blood_group
+        self.emergency_contact = emergency_contact
+        self.photo = photo
+        self.clinic_id = clinic_id
+        self.user_id = user_id  # New field

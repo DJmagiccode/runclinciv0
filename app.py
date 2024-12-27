@@ -123,7 +123,7 @@ def clinic_home(clinic_id):
 def register_patient(clinic_id):
     form = RegistrationForm()
     if form.validate_on_submit():
-        existing_patient = Patient.query.filter_by(contact=form.contact.data).first()
+        existing_patient = Patient.query.filter_by(contact=form.contact.data, user_id=session['user_id']).first()
         if existing_patient:
             flash(_('A patient with this contact number already exists.'), 'error')
             return redirect(url_for('register_patient', clinic_id=clinic_id))
@@ -142,10 +142,12 @@ def register_patient(clinic_id):
             blood_group=form.blood_group.data,
             emergency_contact=form.emergency_contact.data,
             photo=photo_filename,
-            clinic_id=clinic_id
+            clinic_id=clinic_id,
+            user_id=session['user_id']  # Set user_id to the logged-in user
         )
         db.session.add(patient)
         db.session.commit()
+        flash(_('Patient registered successfully.'), 'success')
         return redirect(url_for('clinic_home', clinic_id=clinic_id))
     return render_template('registration.html', form=form)
 
@@ -158,9 +160,11 @@ def doctor_home():
 @login_required
 def patients():
     search = request.args.get('search')
+    user_id = session['user_id']
     if search:
         patients = Patient.query.filter(
-            Patient.first_name.contains(search) |
+            (Patient.user_id == user_id) &
+            (Patient.first_name.contains(search) |
             Patient.last_name.contains(search) |
             Patient.address.contains(search) |
             Patient.contact.contains(search) |
@@ -168,10 +172,10 @@ def patients():
             Patient.age.contains(search) |
             Patient.sex.contains(search) |
             Patient.blood_group.contains(search) |
-            Patient.emergency_contact.contains(search)
+            Patient.emergency_contact.contains(search))
         ).all()
     else:
-        patients = Patient.query.all()
+        patients = Patient.query.filter_by(user_id=user_id).all()
     return render_template('patients.html', patients=patients)
 
 @app.route('/patient/<int:patient_id>')
