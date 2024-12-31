@@ -103,6 +103,46 @@ The static files (CSS, images, etc.) are located in the [static](http://_vscodec
 - [styles.css](http://_vscodecontentref_/39): The main stylesheet for the application.
 - `uploads/`: Directory for uploaded files (e.g., patient photos).
 
+## Running on a VPS
+
+To run this application on a VPS, follow these steps:
+
+1. **Install PostgreSQL**:
+    ```sh
+    sudo apt update
+    sudo apt install postgresql postgresql-contrib
+    ```
+
+2. **Create a PostgreSQL Database and User**:
+    ```sh
+    sudo -i -u postgres
+    psql
+    CREATE DATABASE medical_clinic;
+    CREATE USER clinic_user WITH PASSWORD 'your_password';
+    ALTER ROLE clinic_user SET client_encoding TO 'utf8';
+    ALTER ROLE clinic_user SET default_transaction_isolation TO 'read committed';
+    ALTER ROLE clinic_user SET timezone TO 'UTC';
+    GRANT ALL PRIVILEGES ON DATABASE medical_clinic TO clinic_user;
+    \q
+    exit
+    ```
+
+3. **Update the Configuration**:
+    Update the `DATABASE_URL` environment variable in your VPS to point to the PostgreSQL database:
+    ```sh
+    export DATABASE_URL="postgresql://clinic_user:your_password@localhost/medical_clinic"
+    ```
+
+4. **Install Gunicorn**:
+    ```sh
+    pip install gunicorn
+    ```
+
+5. **Run the Application with Gunicorn**:
+    ```sh
+    gunicorn -w 4 -b 0.0.0.0:80 app:app
+    ```
+
 ## License
 
 This project is licensed under the MIT License.
