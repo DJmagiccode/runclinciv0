@@ -57,21 +57,26 @@ The application configuration is defined in [config.py](http://_vscodecontentref
 
 The database models are defined in [models.py](http://_vscodecontentref_/21):
 
-- [Clinic](http://_vscodecontentref_/22): Represents a clinic with fields for name, contact, owner, head doctor, address, and photo.
-- [Patient](http://_vscodecontentref_/23): Represents a patient with fields for first name, last name, address, contact, email, age, sex, blood group, emergency contact, and photo.
+- [User](http://_vscodecontentref_/22): Represents a user with fields for username, email, and password hash.
+- [Clinic](http://_vscodecontentref_/23): Represents a clinic with fields for name, contact, owner, head doctor, address, and photo.
+- [Patient](http://_vscodecontentref_/24): Represents a patient with fields for first name, last name, address, contact, email, age, sex, blood group, emergency contact, photo, and user_id.
 
 ## Forms
 
-The forms are defined in [forms.py](http://_vscodecontentref_/24):
+The forms are defined in [forms.py](http://_vscodecontentref_/25):
 
-- [RegistrationForm](http://_vscodecontentref_/25): A form for registering patients.
-- [ClinicForm](http://_vscodecontentref_/26): A form for adding clinics.
+- [RegistrationForm](http://_vscodecontentref_/26): A form for registering patients.
+- [ClinicForm](http://_vscodecontentref_/27): A form for adding clinics.
+- [LoginForm](http://_vscodecontentref_/28): A form for user login.
+- [RegisterForm](http://_vscodecontentref_/29): A form for user registration.
 
 ## Routes
 
-The application routes are defined in [app.py](http://_vscodecontentref_/27):
+The application routes are defined in [app.py](http://_vscodecontentref_/30):
 
 - `/`: The home page.
+- `/login`: A form for user login.
+- `/register`: A form for user registration.
 - `/clinics`: Displays a list of clinics.
 - `/add_clinic`: A form to add a new clinic.
 - `/clinic/<int:clinic_id>`: Displays the home page for a specific clinic.
@@ -84,23 +89,25 @@ The application routes are defined in [app.py](http://_vscodecontentref_/27):
 
 ## Templates
 
-The HTML templates are located in the [templates](http://_vscodecontentref_/28) directory:
+The HTML templates are located in the [templates](http://_vscodecontentref_/31) directory:
 
-- [add_clinic.html](http://_vscodecontentref_/29): Template for adding a new clinic.
-- [clinic_home.html](http://_vscodecontentref_/30): Template for the clinic home page.
-- [clinics.html](http://_vscodecontentref_/31): Template for displaying a list of clinics.
-- [doctor_home.html](http://_vscodecontentref_/32): Template for the doctor's dashboard.
-- [index.html](http://_vscodecontentref_/33): Template for the home page.
-- [modify_patient.html](http://_vscodecontentref_/34): Template for modifying patient details.
-- [patient_detail.html](http://_vscodecontentref_/35): Template for displaying patient details.
-- [patients.html](http://_vscodecontentref_/36): Template for displaying a list of patients.
-- [registration.html](http://_vscodecontentref_/37): Template for registering a new patient.
+- [add_clinic.html](http://_vscodecontentref_/32): Template for adding a new clinic.
+- [clinic_home.html](http://_vscodecontentref_/33): Template for the clinic home page.
+- [clinics.html](http://_vscodecontentref_/34): Template for displaying a list of clinics.
+- [doctor_home.html](http://_vscodecontentref_/35): Template for the doctor's dashboard.
+- [index.html](http://_vscodecontentref_/36): Template for the home page.
+- [login.html](http://_vscodecontentref_/37): Template for user login.
+- [modify_patient.html](http://_vscodecontentref_/38): Template for modifying patient details.
+- [patient_detail.html](http://_vscodecontentref_/39): Template for displaying patient details.
+- [patients.html](http://_vscodecontentref_/40): Template for displaying a list of patients.
+- [register_user.html](http://_vscodecontentref_/41): Template for user registration.
+- [registration.html](http://_vscodecontentref_/42): Template for registering a new patient.
 
 ## Static Files
 
-The static files (CSS, images, etc.) are located in the [static](http://_vscodecontentref_/38) directory:
+The static files (CSS, images, etc.) are located in the [static](http://_vscodecontentref_/43) directory:
 
-- [styles.css](http://_vscodecontentref_/39): The main stylesheet for the application.
+- [styles.css](http://_vscodecontentref_/44): The main stylesheet for the application.
 - `uploads/`: Directory for uploaded files (e.g., patient photos).
 
 ## Running on a VPS
