@@ -1,5 +1,4 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session
-from flask_babel import Babel, gettext as _
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from functools import wraps
@@ -20,17 +19,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Set up logging
 logging.basicConfig(filename='error.log', level=logging.ERROR)
-
-# Configure Babel
-app.config['BABEL_DEFAULT_LOCALE'] = 'en'
-babel = Babel(app)
-
-def get_locale():
-    return request.args.get('lang', 'en')
-
-@babel.localeselector
-def get_locale():
-    return request.accept_languages.best_match(['en', 'es', 'fr', 'de'])
 
 @app.shell_context_processor
 def make_shell_context():
@@ -65,7 +53,7 @@ def login():
         if user and user.check_password(form.password.data):
             session['user_id'] = user.id
             return redirect(url_for('index'))
-        flash(_('Invalid username or password'), 'error')
+        flash('Invalid username or password', 'error')
     return render_template('login.html', form=form, register_form=register_form)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -76,7 +64,7 @@ def register_user():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash(_('Registration successful. Please log in.'), 'success')
+        flash('Registration successful. Please log in.', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
@@ -128,7 +116,7 @@ def register_patient(clinic_id):
     if form.validate_on_submit():
         existing_patient = Patient.query.filter_by(contact=form.contact.data, user_id=session['user_id']).first()
         if existing_patient:
-            flash(_('A patient with this contact number already exists.'), 'error')
+            flash('A patient with this contact number already exists.', 'error')
             return redirect(url_for('register_patient', clinic_id=clinic_id))
         photo_filename = None
         if form.photo.data:
@@ -150,7 +138,7 @@ def register_patient(clinic_id):
         )
         db.session.add(patient)
         db.session.commit()
-        flash(_('Patient registered successfully.'), 'success')
+        flash('Patient registered successfully.', 'success')
         return redirect(url_for('clinic_home', clinic_id=clinic_id))
     return render_template('registration.html', form=form)
 
