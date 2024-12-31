@@ -59,13 +59,17 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register_user():
     form = RegisterForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Registration successful. Please log in.', 'success')
-        return redirect(url_for('login'))
+    try:
+        if form.validate_on_submit():
+            user = User(username=form.username.data, email=form.email.data)
+            user.set_password(form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('Registration successful. Please log in.', 'success')
+            return redirect(url_for('login'))
+    except Exception as e:
+        logging.error(f"Exception during user registration: {e}")
+        flash('An error occurred during registration. Please try again.', 'error')
     return render_template('register.html', form=form)
 
 @app.route('/logout')
