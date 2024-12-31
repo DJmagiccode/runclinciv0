@@ -47,19 +47,17 @@ def login():
     if 'user_id' in session:
         return redirect(url_for('index'))
     form = LoginForm()
-    register_form = RegisterForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.check_password(form.password.data):
             session['user_id'] = user.id
             return redirect(url_for('index'))
         flash('Invalid username or password', 'error')
-    return render_template('login.html', form=form, register_form=register_form)
+    return render_template('login.html', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_user():
     form = RegisterForm()
-    register_form = RegisterForm()
     try:
         if form.validate_on_submit():
             user = User(username=form.username.data, email=form.email.data)
@@ -71,7 +69,7 @@ def register_user():
     except Exception as e:
         logging.error(f"Exception during user registration: {e}")
         flash('An error occurred during registration. Please try again.', 'error')
-    return render_template('register_user.html', form=form, register_form=register_form)
+    return render_template('register_user.html', form=form)
 
 @app.route('/logout')
 def logout():
