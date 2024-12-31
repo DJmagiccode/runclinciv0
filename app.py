@@ -7,7 +7,7 @@ from models import Clinic, Patient
 import os
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
+app.config.from_object('config.ProductionConfig')
 db.init_app(app)
 
 migrate = Migrate(app, db)
@@ -146,4 +146,4 @@ def delete_patient(patient_id):
     return redirect(url_for('patients'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0')

@@ -103,6 +103,48 @@ The static files (CSS, images, etc.) are located in the [static](http://_vscodec
 - [styles.css](http://_vscodecontentref_/39): The main stylesheet for the application.
 - `uploads/`: Directory for uploaded files (e.g., patient photos).
 
+## Deployment to VPS
+
+To deploy the application to a VPS, follow these steps:
+
+1. **Clone the repository**:
+    ```sh
+    git clone <repository-url>
+    cd <repository-directory>
+    ```
+
+2. **Create a virtual environment and activate it**:
+    ```sh
+    python -m venv venv
+    source venv/bin/activate
+    ```
+
+3. **Install the dependencies**:
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+4. **Set up the production database**:
+    - Install PostgreSQL on your VPS.
+    - Create a new PostgreSQL database and user.
+    - Update the `SQLALCHEMY_DATABASE_URI` in `config.py` with the appropriate connection string.
+
+5. **Initialize the database**:
+    ```sh
+    flask db init
+    flask db migrate -m "Initial migration"
+    flask db upgrade
+    ```
+
+6. **Run the application with Gunicorn**:
+    ```sh
+    gunicorn -w 4 -b 0.0.0.0:8000 wsgi:application
+    ```
+
+7. **Set up a reverse proxy**:
+    - Install and configure Nginx or Apache to act as a reverse proxy for the Gunicorn server.
+    - Point your domain name (e.g., runclinic.online) to your VPS IP address.
+
 ## License
 
 This project is licensed under the MIT License.
