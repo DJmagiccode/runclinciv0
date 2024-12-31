@@ -59,6 +59,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register_user():
     form = RegisterForm()
+    register_form = RegisterForm()
     try:
         if form.validate_on_submit():
             user = User(username=form.username.data, email=form.email.data)
@@ -70,7 +71,7 @@ def register_user():
     except Exception as e:
         logging.error(f"Exception during user registration: {e}")
         flash('An error occurred during registration. Please try again.', 'error')
-    return render_template('register.html', form=form)
+    return render_template('register_user.html', form=form, register_form=register_form)
 
 @app.route('/logout')
 def logout():
