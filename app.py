@@ -25,9 +25,12 @@ logging.basicConfig(filename='error.log', level=logging.ERROR)
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'
 babel = Babel(app)
 
-
 def get_locale():
     return request.args.get('lang', 'en')
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(['en', 'es', 'fr', 'de'])
 
 @app.shell_context_processor
 def make_shell_context():

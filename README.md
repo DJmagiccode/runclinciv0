@@ -9,6 +9,7 @@ This is a web application for managing a medical clinic. It allows users to regi
 - View and modify patient details
 - Search for patients
 - Doctor's dashboard
+- Multilingual support using Flask-Babel
 
 ## Project Structure
 pycache/ app.py config.py db.py dbinit.bat forms.py init_db.py instance/ models.py static/ styles.css uploads/ templates/ add_clinic.html clinic_home.html clinics.html doctor_home.html index.html modify_patient.html patient_detail.html patients.html registration.html
@@ -43,6 +44,13 @@ pycache/ app.py config.py db.py dbinit.bat forms.py init_db.py instance/ models.
 5. Run the application:
     ```sh
     flask run
+    ```
+
+6. Set up translations:
+    ```sh
+    pybabel extract -F babel.cfg -o messages.pot .
+    pybabel init -i messages.pot -d translations -l <language-code>
+    pybabel compile -d translations
     ```
 
 ## Configuration
