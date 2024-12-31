@@ -234,5 +234,7 @@ def unhandled_exception(e):
     logging.error(f"Unhandled Exception: {e}, route: {request.url}")
     return "", 204
 
+app.config['SESSION_COOKIE_SECURE'] = True
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=80)
